@@ -1,0 +1,16 @@
+.login-box {
+    width:360px;
+    height: 360px;
+    box-shadow: 0 0 3px #ccc;
+    background: #fff;
+    margin: 60px auto;
+    border-radius: 10px;
+    padding: 20px;
+}
+.title {
+    text-align: center;
+    margin: 20px auto;
+}
+.login {
+    width:100%;
+}

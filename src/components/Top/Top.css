@@ -1,0 +1,21 @@
+.account-option {
+    text-align: right;
+    font-size: 14px;
+}
+.account-option .tip {
+    display: inline-block;
+    border-left:1px solid #13a5ff;
+    padding: 0 20px;
+    line-height: 20px;
+    margin-top:22px;
+    cursor: pointer;
+}
+.account-option .el-dropdown-link {
+    color:#fff;
+    padding: 0 20px;
+    cursor: pointer;
+}
+.account-option .el-dropdown-menu{
+    margin:0px auto;
+    text-align: center;
+}
