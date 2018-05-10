@@ -1,15 +1,14 @@
 import React,{Component} from 'react'
-import {Form,Input,Button,Checkbox,Message} from 'element-react'
-import {BrowserRouter as Router,Route,Redirect,Switch } from 'react-router-dom'
+import {Form,Input,Button,Checkbox} from 'element-react'
 import './Login.css'
 import http from '../../until/js/http'
-import App from '../../App';
+import Lockr from 'lockr'
 export default class Login extends Component{
     constructor(props) {
         super(props);
       
         this.state = {
-            logined:true,
+            title:'',
             loading:false,
             form: {
                 username: null,
@@ -26,64 +25,43 @@ export default class Login extends Component{
         };
       }
     onChange(key, value) {
-    this.setState({
-        form: Object.assign(this.state.form, { [key]: value })
+        this.setState({
+            form: Object.assign(this.state.form, { [key]: value })
         });
-        console.log(this.state.form)
     }
     login(e){
         e.preventDefault();
-        console.log(this.refs)
         this.refs.form.validate((valid) => {
             if (valid) {
-            this.setState({
-                loading:true
-            })
-            var data = this.state.form
-            http.apiPost('admin/base/login',data)
-            .then(res=>{
-                this.setState({
-                    loading:false
-                })
-                console.log(res)
-                if(res.code==200){
-                    Message({
-                        message:'登录成功',
-                        type:'success'
-                    })
+                var data = this.state.form
+                http.apiPost('admin/base/login',data)
+                .then(res=>{
                     this.setState({
-                        logined:true
+                        loading:false
                     })
-                }else {
-                    Message({
-                        message:res.error,
-                        type:'error'
-                    })
-                }
-            })
+                    if(res.code==200){
+                        window.$message.success('登录成功')
+                        Lockr.set('authKey',res.data.authKey)
+                        Lockr.set('authList',res.data.authList)
+                        Lockr.set('menusList',res.data.menusList)
+                        Lockr.set('sessionId',res.data.sessionId)
+                        Lockr.set('userInfo',res.data.userInfo)
+                        this.props.history.push('/')  
+                    }else {
+                        window.$message.error(res.error)
+                    }
+                })
             } else {
                 return false;
             }
         });
-        
     }
     render (){
-        if(this.state.logined){
-            return (
-                <Router>
-                  <Switch>
-                  
-                  <Route exact path="/" component={App}/>
-                    <Redirect to="/"/>
-                  </Switch>
-                  
-               </Router>
-              )
-        }
         return (
+            
             <div className="login-box">
-                <h3 className="title">xxxxxxxx</h3>
-                <Form ref="form" model={this.state.form} labelWidth="50" rules={this.state.rules}>
+                <h2 className="title">{this.state.title}</h2>
+                <Form ref="form" model={this.state.form} labelWidth="50" rules={this.state.rules} >
                 <Form.Item label="账号" prop="username">
                     <Input onChange={this.onChange.bind(this,'username')} value={this.state.form.username} placeholder="请输入用户名" ></Input>
                 </Form.Item>
@@ -99,5 +77,19 @@ export default class Login extends Component{
                 </Form>
             </div>
         )
+    }
+    componentDidMount(){
+        this.getConfigs()
+    }
+    getConfigs(){
+        http.apiPost('admin/base/getConfigs')
+        .then(res=>{
+            console.log(res)
+            if(res.code===200){
+                this.setState({
+                    title:res.data.SYSTEM_NAME
+                })
+            }
+        })
     }
 } 

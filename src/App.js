@@ -4,12 +4,14 @@ import 'element-theme-default';
 import Top from './components/Top';
 import Left from './components/Left';
 import Login from './components/Login';
-// import { Breadcrumb } from 'element-react';
+import NoFound from './components/NoFound';
+import Rules from './components/Rules';
+import Lockr from 'lockr'
 import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 import { Breadcrumb } from 'antd';
 import {Link} from 'react-router-dom'
 import {BrowserRouter as Router,Route,Redirect,Switch } from 'react-router-dom'
-
+import ReactCSSTransitionGroup from 'react-addons-css-transition-group'
 import http from './until/js/http'
 const Topics = ({ match }) => (
   <div>
@@ -42,12 +44,20 @@ class App extends Component {
       menus:[],
       subMenus:[],
       breadcrumb:[],
-      logined:true
+      logined:false
     }
     var menus = JSON.parse(window.localStorage.getItem('menus'));
     this.leftMenus=menus[0].child
   }
   componentDidMount(){
+    console.log(this.props)
+    var userInfo = Lockr.get('userInfo')
+    if(!userInfo){
+      console.log(this.props)
+      console.log(window)
+      window.$message.warn('您还没登录！',2,()=>this.props.history.replace('./login'));
+      // 
+    }
     var menus = JSON.parse(window.localStorage.getItem('menus'));
     console.log(menus)
     this.setState({
@@ -56,9 +66,6 @@ class App extends Component {
       breadcrumb:[menus[0],menus[0].child[0]
       ]
     })
-    http.apiPost('admin/base/getConfigs')
-    .then(res=>console.log(res))
-
 
   }
   getCurrentMenu(val){
@@ -90,48 +97,44 @@ class App extends Component {
     })
   }
   render() {
-    if(this.state.logined) {
+    
       return (
-        <Router>
-          <Switch>
-          
-          <Route exact path="/login" component={Login}/>
-          <Redirect to="/login"/>
-          </Switch>
-          
-       </Router>
-      )
-     }
-    return (
-    <Router>
-      <div className="panel-box">
-      <Top menus={this.state.menus} getCurrent={this.getCurrentMenu.bind(this)}/>
-        <div className="panel-main">
-          <Left left-menu={this.state.subMenus} getLeftMenu={this._getLeftMenu.bind(this)}/>
-          <div className="section">
-            <Breadcrumb separator="/">
-              {
-                this.state.breadcrumb.map((_,i)=>{
-                  return (
-                    <Breadcrumb.Item key={i}>
-                    <Link to={_.url}>{_.title}</Link>
-                    </Breadcrumb.Item>
-                  )
-                })
-              }
-            </Breadcrumb>
-            <div className="section-main">
-            <Route exact path="/" component={Home}/>
-            <Route exact path="/cms/home/dashboard/list" component={Home}/>
-            <Route exact path="/cms/pudu/configs" component={Topics}/>
-            <Route exact path="/cms/pudu/city" component={Account}/>
+          <div className="panel-box">
+            <Top menus={this.state.menus} getCurrent={this.getCurrentMenu.bind(this)}/>
+            <div className="panel-main">
+              <Left left-menu={this.state.subMenus} getLeftMenu={this._getLeftMenu.bind(this)}/>
+              <div className="section">
+                <Breadcrumb separator="/">
+                  {
+                    this.state.breadcrumb.map((_,i)=>{
+                      return (
+                        <Breadcrumb.Item key={i}>
+                        <Link to={_.url}>{_.title}</Link>
+                        </Breadcrumb.Item>
+                      )
+                    })
+                  }
+                </Breadcrumb>
+                <ReactCSSTransitionGroup
+                  component="div"
+                  className="react-container"
+                  transitionName="fade"
+                  transitionEnterTimeout={500}
+                  transitionLeaveTimeout={300}>
+                <div className={`section-main ${this.props.location.pathname}`} key={this.props.location.pathname} >
+                <Route exact path="/" component={Home}/>
+                <Route exact path="/cms/home/dashboard/list" component={Home}/>
+                <Route exact path="/cms/pudu/configs" component={Topics}/>
+                <Route exact path="/cms/pudu/city" component={Account}/>
+                <Route exact path="/cms/home/rule/list" component={Rules}/>
+                {/* <Route path="*" component={NoFound}/> */}
+                </div>
+                </ReactCSSTransitionGroup>
+              </div>
             </div>
           </div>
-        </div>
-      </div>
-    </Router>
-      
-    );
+      )
+    
   }
 }
 
