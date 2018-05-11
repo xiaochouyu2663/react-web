@@ -1,42 +1,17 @@
 .panel-box {
   height: 100%;
 }
-.panel-top {
-  min-width: 1200px;
-  height: 74px;
-  line-height: 74px;
-  background: #0091ea;
-  color: #fff;
-}
-.panel-top .el-row {
-  width: 1200px;
-  margin: 0 auto;
-}
-.panel-top  .el-menu {
-  background: none;
-}
-.panel-top  .el-menu--horizontal .el-menu-item{
-  height: 74px;
-  line-height: 74px;
-  color: #fff;
-  border:none;
-}
-.panel-top  .el-menu--horizontal .el-menu-item.is-active{
-  background: #0099f7;
-}
-.panel-top  .el-menu--horizontal .el-menu-item:hover {
-  background: #0099f7;
-  border:none;
-}
+
 .panel-main{
-  width:1200px;
+  width:92%;
+  min-width:1200px;
   margin: 0 auto;
   height: 100%;
   overflow: hidden;
 }
 .panel-main .aside {
   width: 190px;
-  height: 500px;
+  min-height: 500px;
   background: #fff;
   float:left;
   margin-right: 20px;
@@ -56,13 +31,12 @@
 
 .section {
   overflow: hidden;
-  width:990px;
   margin-top: 20px;
-  height: 100%;
+  min-height: 480px;
+
 }
 .section-main{
   background: #fff;
-  width:990px;
   margin-top: 20px;
   height: 450px;
   /* overflow-y:scroll; */

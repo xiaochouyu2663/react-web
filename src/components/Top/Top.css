@@ -1,3 +1,35 @@
+.panel-top {
+    width:100%;
+    min-width: 1200px;
+    height: 74px;
+    line-height: 74px;
+    background: #0091ea;
+    color: #fff;
+  }
+  .panel-top .el-row {
+    width: 92%;
+    min-width:1200px;
+    margin: 0 auto;
+  }
+  .panel-top  .el-menu {
+    background: none;
+  }
+  .panel-top  .el-menu--horizontal .el-menu-item{
+    height: 74px;
+    line-height: 74px;
+    color: #fff;
+    border:none;
+  }
+  .panel-top  .el-menu--horizontal .el-menu-item.is-active{
+    background: #0099f7;
+  }
+  .panel-top  .el-menu--horizontal .el-menu-item:hover {
+    background: #0099f7;
+    border:none;
+  }
+  .panel-top  .el-menu--horizontal .el-menu-item a {
+    text-decoration: none;
+  }
 .account-option {
     text-align: right;
     font-size: 14px;

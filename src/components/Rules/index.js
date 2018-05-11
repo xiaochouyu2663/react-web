@@ -7,7 +7,7 @@ export default class Rules extends Component {
         dataSource:[]
     }
     componentDidMount(){
-        this.tableInit()
+       this.tableInit()
     }
     render(){
           const columns = [{
@@ -108,6 +108,11 @@ export default class Rules extends Component {
                     loading:false
                 })
             }
+        })
+        .catch(err=>{
+            this.setState({
+                loading:false
+            })
         })
     }
     delData(val){
