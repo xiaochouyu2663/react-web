@@ -39,7 +39,7 @@ export default class Login extends Component{
                     this.setState({
                         loading:false
                     })
-                    if(res.code==200){
+                    if(res.code===200){
                         window.$message.success('登录成功')
                         Lockr.set('authKey',res.data.authKey)
                         Lockr.set('authList',res.data.authList)

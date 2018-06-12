@@ -7,95 +7,83 @@ import Main from './components/Main';
 // import Login from './components/Login';
 // import NoFound from './components/NoFound';
 
+import {Provider} from 'react-redux'
+
 import Lockr from 'lockr'
 import 'antd/dist/antd.css';  // or 'antd/dist/antd.less'
 import { Breadcrumb } from 'antd';
-import {Link} from 'react-router-dom'
-import {Route } from 'react-router-dom'
 
-import http from './until/js/http'
+import { createStore } from 'redux'
+import todoReducer from './reducer'
+import {
+  addTodo,
+  toggleTodo,
+  setVisibilityFilter,
+  VisibilityFilters
+} from './action'
+let store = createStore(todoReducer)
 
+console.log(store.getState())
+const unsubscribe = store.subscribe(() =>
+  console.log(store.getState())
+)
 
+store.dispatch(addTodo('Learn about actions'))
+store.dispatch(addTodo('Learn about reducers'))
+// store.dispatch(setVisibilityFilter(VisibilityFilters.SHOW_COMPLETED))
+// store.dispatch(toggleTodo(1))
 class App extends Component {
   
   constructor(props){
     super(props)
-    var menus = JSON.parse(window.localStorage.getItem('menus'));
-    this.state={
-      menus:menus,
-      subMenus:menus[0].child,
-      breadcrumb:[]
-    }
-    
-    this.leftMenus=menus[0].child
+    let menus = Lockr.get('menusList');
+    this.menus=menus
+    this.subMenus=menus[0].child
+    this.breadcrumb=[menus[0],menus[0].child[0]]
   }
   componentDidMount(){
-    console.log(this.props)
     var userInfo = Lockr.get('userInfo')
     if(!userInfo){
-      
-      console.log(window)
-      window.$message.warn('您还没登录！',2,()=>this.props.history.replace('./login'));
+      window.$message.warn('您还没登录！',2,()=>this.props.history.replace('/login'));
     }
-    var menus = JSON.parse(window.localStorage.getItem('menus'));
-    this.setState({
-      menus:menus,
-      subMenus:menus[0].child,
-      breadcrumb:[menus[0],menus[0].child[0]
-      ]
-    })
-
   }
   shouldComponentUpdate(nextProps,nextState){
-    
-    var differentSubMenus = this.state.subMenus !== nextState.subMenus;
-    var differentBreadcrumb = this.state.breadcrumb !== nextState.breadcrumb;
-    
-    if(differentSubMenus){
-      
-      return false
-    }else{
       return true;
-    }
-      
   }
   getCurrentMenu(val){
-    this.setState({
-      subMenus:this.state.menus[val].child,
-      // breadcrumb:[this.state.menus[val],this.state.menus[val].child[0]]
-    })
+    this.subMenus=this.menus[val].child
+    this.breadcrumb=[this.menus[val],this.menus[val].child[0]]
   }
   _getLeftMenu(val){
-    var index,second,breadcrumb=this.state.breadcrumb;
+    var index,second,breadcrumb=this.breadcrumb;
     
     if(val.indexOf('-')===-1){
       index = val;
-      breadcrumb[1]=this.state.subMenus[index];
+      breadcrumb[1]=this.subMenus[index];
     }else{
       index = val.slice(0,val.indexOf('-'))
       second = val.slice(val.indexOf('-')+1)
-      breadcrumb[1]=this.state.subMenus[index];
-      breadcrumb[2]=this.state.subMenus[index].child[second];
+      breadcrumb[1]=this.subMenus[index];
+      breadcrumb[2]=this.subMenus[index].child[second];
       
     }
-    this.setState({
-      breadcrumb:breadcrumb
-    })
+   
+    this.breadcrumb=breadcrumb
   }
   render() {
-      console.log('组件App渲染')
       return (
+        <Provider store={store}>
           <div className="panel-box">
-            <Top menus={this.state.menus} getCurrent={this.getCurrentMenu.bind(this)}/>
+            <Top menus={this.menus} getCurrent={this.getCurrentMenu.bind(this)}/>
             <div className="panel-main">
-              <Left left-menu={this.state.subMenus} getLeftMenu={this._getLeftMenu.bind(this)}/>
+              <Left left-menu={this.subMenus} getLeftMenu={this._getLeftMenu.bind(this)}/>
               <div className="section">
                 <Breadcrumb separator="/">
                   {
-                    this.state.breadcrumb.map((_,i)=>{
+                    this.breadcrumb.map((_,i)=>{
                       return (
                         <Breadcrumb.Item key={i}>
-                        <Link to={_.url}>{_.title}</Link>
+                        {_.title}
                         </Breadcrumb.Item>
                       )
                     })
@@ -105,6 +93,7 @@ class App extends Component {
               </div>
             </div>
           </div>
+          </Provider>
       )
     
   }

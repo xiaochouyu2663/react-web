@@ -59,23 +59,14 @@ export default class Rules extends Component {
             onChange: (selectedRowKeys, selectedRows) => {
               console.log(`selectedRowKeys: ${selectedRowKeys}`, 'selectedRows: ', selectedRows);
             },
-            // getCheckboxProps: record => ({
-            //   disabled: record.name === 'Disabled User', 
-            //   name: record.name,
-            // }),
+           
           };
-        const Footer = ()=>(
-            <div>
-                <Button>启用</Button>
-                <Button style={{margin:'0 15px',display:'inline-block'}}>禁用</Button>
-                <Button>删除</Button>
-            </div>
-        )
+       
         return (
             <div>
                 <Spin tip="Loading..." spinning={this.state.loading}>
                 <Table rowSelection={rowSelection} dataSource={this.state.dataSource} columns={columns} 
-                pagination={{ pageSize: 50 }} scroll={{ y: 330 }} footer={Footer}>
+                 scroll={{ y: 470 }} bordered>
                 </Table>
                 </Spin>
                 
@@ -98,7 +89,7 @@ export default class Rules extends Component {
                         isLog:item.isLog
                     })
                 })
-                console.log(arr)
+                
                 this.setState({
                     dataSource:arr,
                     loading:false

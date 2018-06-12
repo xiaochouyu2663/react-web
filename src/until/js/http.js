@@ -1,7 +1,8 @@
 import Lockr from 'lockr'
 import axios from 'axios'
 import {withRouter} from 'react-router-dom';
-axios.defaults.baseURL = 'http://localhost/yingdun-api/v1/' 
+axios.defaults.baseURL = 'http://localhost/yingdun-api/v1'
+axios.defaults.baseURL = 'http://47.104.160.22' 
 axios.defaults.timeout = 1000 * 15
 axios.defaults.headers.authKey=Lockr.get('authKey')
 axios.defaults.headers.sessionId=Lockr.get('sessionId')
@@ -14,7 +15,7 @@ export default {
         return new Promise((resolve, reject) => {
           axios.get(url, data).then((response) => {
             resolve(response.data)
-            if(response.data.code==101){
+            if(response.data.code===101){
               window.$message.warn('登录已失效，请重新登录')
               // window.location.href('./login')
               console.log(withRouter)
@@ -29,7 +30,7 @@ export default {
         return new Promise((resolve, reject) => {
           axios.post(url, data).then((response) => {
             resolve(response.data)
-            if(response.data.code==101){
+            if(response.data.code===101){
               window.$message.warn('登录已失效')
             }
           }).catch((response) => {

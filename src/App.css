@@ -11,7 +11,7 @@
 }
 .panel-main .aside {
   width: 190px;
-  min-height: 500px;
+  height: 640px;
   background: #fff;
   float:left;
   margin-right: 20px;
@@ -32,15 +32,9 @@
 .section {
   overflow: hidden;
   margin-top: 20px;
-  min-height: 480px;
+  height: 620px;
+}
 
-}
-.section-main{
-  background: #fff;
-  margin-top: 20px;
-  height: 450px;
-  /* overflow-y:scroll; */
-}
 .panel-top .el-menu-item {
   padding: 0;
 }
@@ -74,6 +68,9 @@
   color: #fff;
   border-bottom: none;
   background: #0099f7;
+}
+.panel-main  .aside .el-menu-item a {
+  text-decoration: none;
 }
 
 
